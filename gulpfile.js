@@ -24,17 +24,6 @@ gulp.task('js', function() {
         .pipe(browserSync.stream());
 });
 
-// Static Server + watching scss/html files
-gulp.task('serve', ['sass'], function() {
-
-    browserSync.init({
-        server: "./build"  
-    });
-
-    gulp.watch(['node_modules/bootstrap/scss/bootstrap.scss', 'src/scss/*.scss'], ['sass']);
-    gulp.watch("src/*.html").on('change', browserSync.reload);
-});
-
 
 gulp.task('useref', function(){
     return gulp.src('src/*.html')
@@ -76,10 +65,25 @@ gulp.task('useref', function(){
   gulp.task('html', function() {        //html files von src nach build
       return gulp.src('src/*.html')
       .pipe(gulp.dest('build'))
+      .pipe(browserSync.stream());
   })
 
   gulp.task('clean:build', function() {   //build files löschen 
     return del.sync('build');
+  })
+
+  gulp.task('watch', ['browserSync'], function (){
+    gulp.watch('src/scss/**/*.scss', ['sass']);   
+    gulp.watch('src/*.html', ['html'], browserSync.reload); 
+    gulp.watch('src/js/**/*.js', browserSync.reload); 
+  })
+
+  gulp.task('browserSync', function() {
+    browserSync.init({
+      server: {
+        baseDir: 'build'
+      },
+    })
   })
 
   gulp.task('build', function (callback) {
@@ -90,7 +94,9 @@ gulp.task('useref', function(){
   })
 
   gulp.task('default', function (callback) {
-    runSequence(['js','serve',],
+    runSequence(['js','sass','browserSync', 'watch'],
       callback
     )
   })
+
+  
