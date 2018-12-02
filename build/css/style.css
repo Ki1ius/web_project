@@ -1,2 +1,14 @@
+body, html {
+  font-size: 100%; }
+
 body {
-  background: green; }
+  background: white; }
+
+h1 {
+  font-size: 1rem; }
+
+h2 {
+  font-size: 2rem; }
+
+.innerbody {
+  background-color: darkred; }
